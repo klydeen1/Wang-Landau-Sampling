@@ -16,6 +16,9 @@ class IsingModel: NSObject, ObservableObject {
     var N = 100 // Number of particles
     var numIterations = 1000
     
+    var Mj = 0.0 // Magnetization
+    var C = 0.0 // Specific heat
+    var U = 0.0 // Internal energy
     var temp = 273.15 // Temperature in Kelvin
     let J = 1.0 // The exchange energy in units 1e-21 Joules
     let kB = 0.01380649 // Boltzmann constant in units 1e-21 Joules/Kelvin

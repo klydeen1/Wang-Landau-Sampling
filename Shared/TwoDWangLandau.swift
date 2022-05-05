@@ -18,15 +18,15 @@ class TwoDWangLandau: IsingModel {
     var height = 0.0
     var histAvg = 0.0
     var histHeight = 0.0
-    var Hsup = 0.0
-    var Hinf = 1.0e10
+    var Hmin = 0.0
+    var Hmax = 1.0e10
     var histPercent = 0.0
     
     var energy = 0
-    var factor = M_E
+    var factor = 1.1
     var tol = 1.0e-8
     var iter = 0
-    var M = 20*20 // Number of particles on one side
+    var M = 5*5 // Number of particles on one side
     
     func initializeTwoDSpin(startType: String) async {
         twoDSpinArray = []
@@ -37,12 +37,16 @@ class TwoDWangLandau: IsingModel {
     }
     
     override func runSimulation(startType: String) async {
-        factor = M_E
-        print(factor)
-        while(factor > tol) {
+        factor = 1.1
+        while(abs(factor - 1.0) > tol) {
             await iterateWangLandau(startType: startType)
         }
+        await calculateProperties()
         await addSpinCoordinates(twoDSpinConfig: twoDSpinArray)
+    }
+    
+    func calculateProperties() async {
+        
     }
     
     /// We index the spin matrix as [i][j]
@@ -74,39 +78,37 @@ class TwoDWangLandau: IsingModel {
             await initializeTwoDSpin(startType: startType)
             energy = -2 * M
             for _ in 0...M {
-                g.append(1);
+                g.append(0.01);
                 hist.append(0);
             }
             iter = 0
-            height = abs(Hsup - Hinf) / 2.0
-            histAvg = (Hsup + Hinf) / 2.0
+            height = abs(Hmin - Hmax) / 2.0
+            histAvg = (Hmin + Hmax) / 2.0
             histPercent = height / histAvg
         }
 
         // Run the Wang Landau algorithm
-        twoDSpinArray = await wangLandau(spinConfig: twoDSpinArray)
+        twoDSpinArray = await wangLandau(twoDSpinConfig: twoDSpinArray)
         if printSpins {
             await printSpin(spinConfig: twoDSpinArray)
         }
         await addSpinCoordinates(twoDSpinConfig: twoDSpinArray)
     }
     
-    func wangLandau(spinConfig: [[Int]]) async -> [[Int]] {
+    func wangLandau(twoDSpinConfig: [[Int]]) async -> [[Int]] {
         iter += 1
         
         // Pick one random particle and flip its spin
         var spinToFlip: (i: Int, j: Int)
-        spinToFlip.i = Int.random(in: 0..<spinConfig.count)
-        spinToFlip.j = Int.random(in: 0..<spinConfig.count)
-        var newConfig = spinConfig
+        spinToFlip.i = Int.random(in: 0..<twoDSpinConfig.count)
+        spinToFlip.j = Int.random(in: 0..<twoDSpinConfig.count)
+        var newConfig = twoDSpinConfig
         
         // Get the energy difference between the configurations
         let deltaE = await getConfigEnergyDiff(spinToFlip: spinToFlip)
         let ETrial = energy + deltaE
         let EPrimeTrial = (ETrial + 2*M) / 4
         var EPrime = (energy + 2*M) / 4
-        // print("\(EPrimeTrial), \(EPrime)")
-        // let deltaS = S[Int(EPrimeTrial)] - S[Int(EPrimeOld)]
         
         let gTrial = g[EPrimeTrial]
         let gPrev = g[EPrime]
@@ -122,6 +124,7 @@ class TwoDWangLandau: IsingModel {
         }
         
         g[EPrime] *= factor // Change the density of states
+        // print(g[EPrime])
         hist[EPrime] += 1
         
         // Check for histogram flatness
@@ -136,21 +139,20 @@ class TwoDWangLandau: IsingModel {
         // Adjust the histogram
         for j in 0...M {
             if (j == 0) {
-                Hsup = 0
-                Hinf = 1.0e10
+                Hmin = 0
+                Hmax = 1.0e10
             }
             if (hist[j] == 0) { continue }
-            if (hist[j] > Hsup) { Hsup = hist[j] }
-            if (hist[j] < Hinf) { Hinf = hist[j] }
+            if (hist[j] > Hmin) { Hmin = hist[j] }
+            if (hist[j] < Hmax) { Hmax = hist[j] }
         }
-        height = Hsup - Hinf
-        histAvg = Hsup + Hinf
+        height = Hmin - Hmax
+        histAvg = Hmin + Hmax
         histPercent = height/histAvg
-        print(histPercent)
         
         if (histPercent < 0.2) { // Flatness reached?
             factor = sqrt(factor)
-            print("New factor: \(factor)")
+            //print("New factor: \(factor)")
             prevHist = hist
             for i in 0..<hist.count {
                 hist[i] = 0.0

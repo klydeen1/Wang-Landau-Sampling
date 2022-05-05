@@ -11,7 +11,7 @@ struct ContentView: View {
     @ObservedObject var myModel = TwoDWangLandau()
     @ObservedObject var drawingData = DrawingData(withData: true)
     
-    @State var NString = "20" // Number of particles on one side
+    @State var NString = "5" // Number of particles on one side
     @State var tempString = "100.0" // Temperature
     @State var tolString = "100" // Tolerance for the simulation divided by 1e-10
     
@@ -31,7 +31,7 @@ struct ContentView: View {
                     }
                     
                     VStack(alignment: .center) {
-                        Text("Temperature (K)")
+                        Text("System Temperature (K)")
                             .font(.callout)
                             .bold()
                         TextField("# Temperature (K)", text: $tempString)
@@ -67,10 +67,14 @@ struct ContentView: View {
                         .padding()
                         .disabled(myModel.enableButton == false)
                     
-                    Button("Reset", action: {Task.init{self.reset()}})
+                    Button("Recalculate Properties", action: {Task.init{await self.getThermoProperties()}})
                         .padding()
                         .disabled(myModel.enableButton == false)
                 }
+                
+                Button("Reset", action: {Task.init{self.reset()}})
+                    .padding()
+                    .disabled(myModel.enableButton == false)
             }
             
             .padding()
@@ -103,6 +107,7 @@ struct ContentView: View {
     
     @MainActor func runMany() async{
         checkNChange()
+        self.reset()
         
         myModel.setButtonEnable(state: false)
         
@@ -125,6 +130,11 @@ struct ContentView: View {
         await myModel.iterateWangLandau(startType: selectedStart)
         drawingData.spinUpData = myModel.newSpinUpPoints
         drawingData.spinDownData = myModel.newSpinDownPoints
+    }
+    
+    @MainActor func getThermoProperties() async {
+        myModel.temp = Double(tempString)!
+        await myModel.calculateProperties()
     }
     
     func checkNChange() {
