@@ -17,6 +17,16 @@
 		652297D3280A273500E4BEA9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297A9280A273100E4BEA9 /* ContentView.swift */; };
 		652297D4280A273500E4BEA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 652297AA280A273500E4BEA9 /* Assets.xcassets */; };
 		652297D5280A273500E4BEA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 652297AA280A273500E4BEA9 /* Assets.xcassets */; };
+		652297E52812083F00E4BEA9 /* OneDSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297E42812083F00E4BEA9 /* OneDSpin.swift */; };
+		652297E62812083F00E4BEA9 /* OneDSpin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297E42812083F00E4BEA9 /* OneDSpin.swift */; };
+		652297E8281208F900E4BEA9 /* TwoDWangLandau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297E7281208F900E4BEA9 /* TwoDWangLandau.swift */; };
+		652297E9281208F900E4BEA9 /* TwoDWangLandau.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297E7281208F900E4BEA9 /* TwoDWangLandau.swift */; };
+		652297EB2812090900E4BEA9 /* DrawingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297EA2812090900E4BEA9 /* DrawingData.swift */; };
+		652297EC2812090900E4BEA9 /* DrawingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297EA2812090900E4BEA9 /* DrawingData.swift */; };
+		652297EE2812091500E4BEA9 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297ED2812091400E4BEA9 /* DrawingView.swift */; };
+		652297EF2812091500E4BEA9 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297ED2812091400E4BEA9 /* DrawingView.swift */; };
+		652297F728120F1800E4BEA9 /* IsingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297F628120F1800E4BEA9 /* IsingModel.swift */; };
+		652297F828120F1800E4BEA9 /* IsingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652297F628120F1800E4BEA9 /* IsingModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +59,11 @@
 		652297C8280A273500E4BEA9 /* Tests macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		652297CC280A273500E4BEA9 /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		652297CE280A273500E4BEA9 /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
+		652297E42812083F00E4BEA9 /* OneDSpin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneDSpin.swift; sourceTree = "<group>"; };
+		652297E7281208F900E4BEA9 /* TwoDWangLandau.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoDWangLandau.swift; sourceTree = "<group>"; };
+		652297EA2812090900E4BEA9 /* DrawingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingData.swift; sourceTree = "<group>"; };
+		652297ED2812091400E4BEA9 /* DrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
+		652297F628120F1800E4BEA9 /* IsingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsingModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +114,11 @@
 			children = (
 				652297A8280A273100E4BEA9 /* Wang_Landau_SamplingApp.swift */,
 				652297A9280A273100E4BEA9 /* ContentView.swift */,
+				652297E42812083F00E4BEA9 /* OneDSpin.swift */,
+				652297E7281208F900E4BEA9 /* TwoDWangLandau.swift */,
+				652297F628120F1800E4BEA9 /* IsingModel.swift */,
+				652297EA2812090900E4BEA9 /* DrawingData.swift */,
+				652297ED2812091400E4BEA9 /* DrawingView.swift */,
 				652297AA280A273500E4BEA9 /* Assets.xcassets */,
 			);
 			path = Shared;
@@ -301,6 +321,11 @@
 			files = (
 				652297D2280A273500E4BEA9 /* ContentView.swift in Sources */,
 				652297D0280A273500E4BEA9 /* Wang_Landau_SamplingApp.swift in Sources */,
+				652297EB2812090900E4BEA9 /* DrawingData.swift in Sources */,
+				652297EE2812091500E4BEA9 /* DrawingView.swift in Sources */,
+				652297E52812083F00E4BEA9 /* OneDSpin.swift in Sources */,
+				652297F728120F1800E4BEA9 /* IsingModel.swift in Sources */,
+				652297E8281208F900E4BEA9 /* TwoDWangLandau.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +335,11 @@
 			files = (
 				652297D3280A273500E4BEA9 /* ContentView.swift in Sources */,
 				652297D1280A273500E4BEA9 /* Wang_Landau_SamplingApp.swift in Sources */,
+				652297EC2812090900E4BEA9 /* DrawingData.swift in Sources */,
+				652297EF2812091500E4BEA9 /* DrawingView.swift in Sources */,
+				652297E62812083F00E4BEA9 /* OneDSpin.swift in Sources */,
+				652297F828120F1800E4BEA9 /* IsingModel.swift in Sources */,
+				652297E9281208F900E4BEA9 /* TwoDWangLandau.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
