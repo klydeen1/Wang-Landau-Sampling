@@ -12,6 +12,9 @@ class TwoDWangLandau: IsingModel {
     var twoDSpinArray: [[Int]] = []
     var S: [Double] = [] // Entropy
     var g: [Double] = [] // Density of states
+    var gNorm: [Double] = []
+    var MjMatrix: [Double] = []
+    var Mji = 0.0
     
     var hist: [Double] = [] // Histogram of energies
     var prevHist: [Double] = []
@@ -30,9 +33,13 @@ class TwoDWangLandau: IsingModel {
     
     func initializeTwoDSpin(startType: String) async {
         twoDSpinArray = []
+        Mji = 0.0
         for _ in 0..<N {
             await initializeSpin(startType: startType)
             twoDSpinArray.append(mySpin.spinArray)
+            for i in 0..<mySpin.spinArray.count {
+                Mji += Double(mySpin.spinArray[i])
+            }
         }
     }
     
@@ -41,12 +48,38 @@ class TwoDWangLandau: IsingModel {
         while(abs(factor - 1.0) > tol) {
             await iterateWangLandau(startType: startType)
         }
+        await normalizeG()
         await calculateProperties()
         await addSpinCoordinates(twoDSpinConfig: twoDSpinArray)
     }
     
+    func normalizeG() async {
+        gNorm = []
+        let gSum = g.reduce(0, +)
+        for Ei in 0..<g.count {
+            gNorm.append(pow(2.0, Double(M)) * g[Ei] / gSum)
+        }
+    }
+    
     func calculateProperties() async {
-        
+        var Unum = 0.0
+        var denom = 0.0
+        var ESquaredNum = 0.0
+        var Mnum = 0.0
+        for Ei in 0..<gNorm.count {
+            Unum += Double(Ei) * gNorm[Ei] * exp(-Double(Ei) / (kB*temp))
+            ESquaredNum += Double(Ei)*Double(Ei) * gNorm[Ei] * exp(-Double(Ei) / (kB*temp))
+            Mnum += Double(MjMatrix[Ei]) * gNorm[Ei] * exp(-Double(Ei) / (kB*temp))
+            denom += gNorm[Ei] * exp(-Double(Ei) / (kB*temp))
+        }
+        Mj = Mnum / denom
+        print("mag: \(Mj)")
+        let ESquaredAvg = ESquaredNum / denom
+        U = Unum / denom
+        print("internal energy: \(U)")
+        C = (ESquaredAvg - U*U) / (temp*temp)
+        print("heat capacity: \(C)")
+        print()
     }
     
     /// We index the spin matrix as [i][j]
@@ -72,14 +105,16 @@ class TwoDWangLandau: IsingModel {
         if (twoDSpinArray.isEmpty) {
             g = []
             S = []
+            MjMatrix = []
             hist = []
             M = N*N
             
             await initializeTwoDSpin(startType: startType)
             energy = -2 * M
             for _ in 0...M {
-                g.append(0.01);
-                hist.append(0);
+                g.append(0.01)
+                MjMatrix.append(0.0)
+                hist.append(0)
             }
             iter = 0
             height = abs(Hmin - Hmax) / 2.0
@@ -119,10 +154,12 @@ class TwoDWangLandau: IsingModel {
         if (gTrial <= gPrev || R >= r) {
             // Accept the trial
             newConfig[spinToFlip.i][spinToFlip.j] *= -1 // Flip the spin of the random particle
+            Mji += Double(2*newConfig[spinToFlip.i][spinToFlip.j])
             energy = ETrial
             EPrime = EPrimeTrial
         }
         
+        MjMatrix[EPrime] = Mji
         g[EPrime] *= factor // Change the density of states
         // print(g[EPrime])
         hist[EPrime] += 1
