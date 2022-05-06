@@ -15,6 +15,10 @@ struct ContentView: View {
     @State var tempString = "100.0" // Temperature
     @State var tolString = "100" // Tolerance for the simulation divided by 1e-10
     
+    @State var magString = ""
+    @State var spHeatString = ""
+    @State var energyString = ""
+    
     @State var selectedStart = "Cold"
     var startOptions = ["Cold", "Hot"]
     
@@ -23,11 +27,10 @@ struct ContentView: View {
             VStack {
                 HStack {
                     VStack(alignment: .center) {
-                        Text("Number of Particles on One Side")
+                        Text("# Particles on One Side")
                             .font(.callout)
                             .bold()
-                        TextField("# Number of Particles", text: $NString)
-                            .padding()
+                        TextField("# Particles on One Side", text: $NString)
                     }
                     
                     VStack(alignment: .center) {
@@ -35,7 +38,6 @@ struct ContentView: View {
                             .font(.callout)
                             .bold()
                         TextField("# Temperature (K)", text: $tempString)
-                            .padding()
                     }
                     
                     VStack(alignment: .center) {
@@ -43,10 +45,9 @@ struct ContentView: View {
                             .font(.callout)
                             .bold()
                         TextField("# Tolerance", text: $tolString)
-                            .padding()
                     }
                 }
-                
+                /*
                 VStack {
                     Text("Start Type")
                         .font(.callout)
@@ -57,6 +58,7 @@ struct ContentView: View {
                         }
                     }
                 }
+                 */
                 
                 HStack {
                     Button("Run Algorithm Once", action: {Task.init{await self.runAlgorithmOnce()}})
@@ -75,6 +77,35 @@ struct ContentView: View {
                 Button("Reset", action: {Task.init{self.reset()}})
                     .padding()
                     .disabled(myModel.enableButton == false)
+                
+                VStack {
+                    Text("Results")
+                        .padding()
+                    
+                    HStack {
+                        Spacer()
+                        VStack(alignment: .center) {
+                            Text("Internal Energy")
+                                .font(.callout)
+                                .bold()
+                            TextField("# Internal Energy", text: $energyString)
+                        }
+                        
+                        VStack(alignment: .center) {
+                            Text("Magnetization")
+                                .font(.callout)
+                                .bold()
+                            TextField("# Magnetization", text: $magString)
+                        }
+                        
+                        VStack(alignment: .center) {
+                            Text("Specific Heat")
+                                .font(.callout)
+                                .bold()
+                            TextField("# Specific Heat", text: $spHeatString)
+                        }
+                    }
+                }
             }
             
             .padding()
@@ -122,6 +153,10 @@ struct ContentView: View {
         await myModel.runSimulation(startType: selectedStart)
         drawingData.spinUpData = myModel.newSpinUpPoints
         drawingData.spinDownData = myModel.newSpinDownPoints
+        
+        magString = myModel.magString
+        spHeatString = myModel.spHeatString
+        energyString = myModel.energyString
         
         myModel.setButtonEnable(state: true)
     }

@@ -12,6 +12,10 @@ class IsingModel: NSObject, ObservableObject {
     @Published var OneDSpins: [Int] = []
     @Published var enableButton = true
     
+    @Published var magString = ""
+    @Published var spHeatString = ""
+    @Published var energyString = ""
+    
     var mySpin = OneDSpin()
     var N = 100 // Number of particles
     var numIterations = 1000
@@ -159,6 +163,27 @@ class IsingModel: NSObject, ObservableObject {
                 newSpinUpPoints.append((xPoint: xCoord, yPoint: Double(i)))
             }
         }
+    }
+    
+    /// updateMagnetizationString
+    /// The function runs on the main thread so it can update the GUI
+    /// - Parameter text: contains the string containing the current value of the magnetization
+    @MainActor func updateMagnetizationString(text:String) async {
+        self.magString = text
+    }
+    
+    /// updateSpecificHeatString
+    /// The function runs on the main thread so it can update the GUI
+    /// - Parameter text: contains the string containing the current value of the specific heat
+    @MainActor func updateSpecificHeatString(text:String) async {
+        self.spHeatString = text
+    }
+    
+    /// updateInternalEnergyString
+    /// The function runs on the main thread so it can update the GUI
+    /// - Parameter text: contains the string containing the current value of the internal energy
+    @MainActor func updateInternalEnergyString(text:String) async {
+        self.energyString = text
     }
     
     /// setButton Enable

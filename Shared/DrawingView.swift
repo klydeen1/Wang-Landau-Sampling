@@ -56,7 +56,7 @@ struct drawSpins: Shape {
         var path = Path()
         
         for item in drawingPoints {
-            let boxWidth = 3.0
+            let boxWidth = 10.0
             let xCoord = item.xPoint/Double(numParticles - 1)*(Double(scale) - boxWidth)
             let yCoord = item.yPoint/Double(numParticles - 1)*(Double(-scale) + boxWidth) + 2.0*Double(center.y) - boxWidth
             path.addRect(CGRect(x: xCoord, y: yCoord, width: boxWidth, height: boxWidth))

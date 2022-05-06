@@ -73,13 +73,13 @@ class TwoDWangLandau: IsingModel {
             denom += gNorm[Ei] * exp(-Double(Ei) / (kB*temp))
         }
         Mj = Mnum / denom
-        print("mag: \(Mj)")
         let ESquaredAvg = ESquaredNum / denom
         U = Unum / denom
-        print("internal energy: \(U)")
         C = (ESquaredAvg - U*U) / (temp*temp)
-        print("heat capacity: \(C)")
-        print()
+        
+        await updateInternalEnergyString(text: "\(U)")
+        await updateMagnetizationString(text: "\(Mj)")
+        await updateSpecificHeatString(text: "\(C)")
     }
     
     /// We index the spin matrix as [i][j]
